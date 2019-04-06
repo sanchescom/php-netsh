@@ -37,7 +37,7 @@ class Command
      * @param string $argument
      * @param array $options
      */
-    public function __construct(UtilityInterface $utility, string $command, string $argument, array $options)
+    public function __construct(UtilityInterface $utility, string $command, string $argument, array $options = [])
     {
         $this->utility = $utility;
         $this->command = $command;
@@ -52,7 +52,7 @@ class Command
      * @param array $options
      * @return Command
      */
-    public static function make(UtilityInterface $utility, string $command, string $argument, array $options)
+    public static function make(UtilityInterface $utility, string $command, string $argument, array $options = [])
     {
         return new self($utility, $command, $argument, $options);
     }

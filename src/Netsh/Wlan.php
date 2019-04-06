@@ -33,7 +33,7 @@ class Wlan
     {
         return Command::make(
             self::getUtility(),
-            static::$command,
+            self::getCommand(),
             __FUNCTION__,
             [
                 'permission' => $permission,
@@ -58,7 +58,7 @@ class Wlan
     {
         return Command::make(
             self::getUtility(),
-            static::$command,
+            self::getCommand(),
             __METHOD__,
             [
                 'filename' => $fileName,
@@ -70,7 +70,6 @@ class Wlan
 
     /**
      * Connects to a wireless network by using the specified parameter.
-     *
      *
      * @param string $name Specifies the name of the wireless profile to use for the connection attempt, (where
      * ProfileName is the name of the wireless profile, as listed in Manage Wireless Networks, or as rendered
@@ -86,11 +85,32 @@ class Wlan
     {
         return Command::make(
             self::getUtility(),
-            static::$command,
+            self::getCommand(),
             __METHOD__,
             [
                 'name' => $name,
                 'ssid' => $ssid,
+                'interface' => $interface,
+            ]
+        );
+    }
+
+    /**
+     * Disconnects the specified interface from a wireless network.
+     *
+     * @param string $interface Specifies the wireless interface to use for the connection attempt, (where
+     * InterfaceName is the name of the wireless interface, as listed in Network Connections, or as rendered
+     * by the netsh wlan show interfaces command).
+     *
+     * @return Command
+     */
+    public static function disconnect(string $interface)
+    {
+        return Command::make(
+            self::getUtility(),
+            self::getCommand(),
+            __METHOD__,
+            [
                 'interface' => $interface,
             ]
         );
@@ -111,7 +131,7 @@ class Wlan
     {
         return Command::make(
             self::getUtility(),
-            static::$command,
+            self::getCommand(),
             __FUNCTION__,
             [
                 'interface' => $interface,
@@ -121,10 +141,32 @@ class Wlan
     }
 
     /**
+     * Displays a list of the current wireless interfaces on a computer.
+     *
+     * @return Command
+     */
+    public static function showInterfaces()
+    {
+        return Command::make(
+            self::getUtility(),
+            self::getCommand(),
+            __FUNCTION__
+        );
+    }
+
+    /**
      * @return Utility
      */
     public static function getUtility()
     {
         return new Utility();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getCommand()
+    {
+        return self::$command;
     }
 }
