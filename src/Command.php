@@ -9,52 +9,50 @@ use Sanchescom\Utility\Contracts\UtilityInterface;
  */
 class Command
 {
-    /**
-     * @var UtilityInterface
-     */
-    protected $utility;
+    /** @var string */
+    private const UTILITY = 'networksetup';
 
-    /**
-     * @var string
-     */
-    protected $command;
+    /** @var string */
+    private $command;
 
-    /**
-     * @var string
-     */
-    protected $argument;
+    /** @var string */
+    private $method;
 
-    /**
-     * @var array
-     */
-    protected $options;
+    /** @var array */
+    private $options;
 
     /**
      * Command constructor.
      *
-     * @param UtilityInterface $utility
      * @param string $command
-     * @param string $argument
+     * @param string $method
      * @param array $options
      */
-    public function __construct(UtilityInterface $utility, string $command, string $argument, array $options = [])
+    protected function __construct(string $command, string $method, array $options = [])
     {
-        $this->utility = $utility;
         $this->command = $command;
-        $this->argument = $argument;
+        $this->method = $method;
         $this->options = $options;
     }
 
     /**
-     * @param UtilityInterface $utility
      * @param string $command
-     * @param string $argument
+     * @param string $method
      * @param array $options
+     *
      * @return Command
      */
-    public static function make(UtilityInterface $utility, string $command, string $argument, array $options = [])
+    public static function make(string $command, string $method, array $options = [])
     {
-        return new self($utility, $command, $argument, $options);
+        return new self($command, $method, $options);
+    }
+
+    /**
+     * @return string
+     */
+    public function getUtility()
+    {
+        return self::UTILITY;
     }
 
     /**
@@ -62,7 +60,7 @@ class Command
      */
     protected function extractArgument()
     {
-        return strtolower(implode(' ', preg_split('/(?=[A-Z])/', $this->argument)));
+        return strtolower(implode(' ', preg_split('/(?=[A-Z])/', $this->method)));
     }
 
     /**
