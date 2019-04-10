@@ -90,15 +90,15 @@ class Command
      */
     protected function implodeOptions()
     {
-        return array_map(
-            function ($value, $option) {
-                if ($value) {
-                    return sprintf("%s='%s'", $option, $value);
-                }
-            },
-            $this->options,
-            array_keys($this->options)
-        );
+        $options = [];
+
+        foreach ($this->options as $option => $value) {
+            if (!is_null($value)) {
+                $options[] = sprintf("%s=%s", $option, $value);
+            }
+        }
+
+        return $options;
     }
 
     /**
