@@ -2,21 +2,19 @@
 
 namespace Sanchescom\Utility;
 
-use Sanchescom\Utility\Contracts\UtilityInterface;
-
 /**
  * Class Command.
  */
 class Command
 {
     /** @var string */
-    private const UTILITY = 'networksetup';
+    private const UTILITY = 'netsh';
+
+    /** @var string */
+    private $argument;
 
     /** @var string */
     private $command;
-
-    /** @var string */
-    private $method;
 
     /** @var array */
     private $options;
@@ -24,27 +22,27 @@ class Command
     /**
      * Command constructor.
      *
+     * @param string $argument
      * @param string $command
-     * @param string $method
      * @param array $options
      */
-    protected function __construct(string $command, string $method, array $options = [])
+    protected function __construct(string $argument, string $command, array $options = [])
     {
+        $this->argument = $argument;
         $this->command = $command;
-        $this->method = $method;
         $this->options = $options;
     }
 
     /**
+     * @param string $argument
      * @param string $command
-     * @param string $method
      * @param array $options
      *
      * @return Command
      */
-    public static function make(string $command, string $method, array $options = [])
+    public static function make(string $argument, string $command, array $options = [])
     {
-        return new self($command, $method, $options);
+        return new self($argument, $command, $options);
     }
 
     /**
@@ -58,9 +56,33 @@ class Command
     /**
      * @return string
      */
-    protected function extractArgument()
+    public function getArgument()
     {
-        return strtolower(implode(' ', preg_split('/(?=[A-Z])/', $this->method)));
+        return $this->argument;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCommand()
+    {
+        return $this->extractCommand();
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->implodeOptions();
+    }
+
+    /**
+     * @return string
+     */
+    protected function extractCommand()
+    {
+        return strtolower(implode(' ', preg_split('/(?=[A-Z])/', $this->command)));
     }
 
     /**
@@ -82,22 +104,14 @@ class Command
     /**
      * @return string
      */
-    protected function implodeCommand()
+    public function __toString()
     {
         return trim(
             implode(' ', array_merge([
-                $this->utility,
-                $this->command,
-                $this->extractArgument(),
-            ], $this->implodeOptions()))
+                $this->getUtility(),
+                $this->getArgument(),
+                $this->getCommand(),
+            ], $this->getOptions()))
         );
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->implodeCommand();
     }
 }

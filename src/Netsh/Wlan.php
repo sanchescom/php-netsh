@@ -10,14 +10,9 @@ use Sanchescom\Utility\Command;
 class Wlan
 {
     /**
-     * @var string System utility name
-     */
-    protected static $utility = 'netsh';
-
-    /**
      * @var string Netsh command
      */
-    protected static $command = 'wlan';
+    private const WLAN = 'wlan';
 
     /**
      * Adds a wireless network, by Service Set Identifier (SSID)
@@ -31,16 +26,11 @@ class Wlan
      */
     public static function addFilter(string $permission, string $ssid, string $networkType)
     {
-        return Command::make(
-            self::getUtility(),
-            self::getCommand(),
-            __FUNCTION__,
-            [
-                'permission' => $permission,
-                'ssid' => $ssid,
-                'network_type' => $networkType,
-            ]
-        );
+        return Command::make(self::WLAN, __FUNCTION__, [
+            'permission' => $permission,
+            'ssid' => $ssid,
+            'network_type' => $networkType,
+        ]);
     }
 
     /**
@@ -56,16 +46,11 @@ class Wlan
      */
     public static function addProfile(string $fileName, string $interface = null, string $user = null)
     {
-        return Command::make(
-            self::getUtility(),
-            self::getCommand(),
-            __METHOD__,
-            [
-                'filename' => $fileName,
-                'interface' => $interface,
-                'user' => $user,
-            ]
-        );
+        return Command::make(self::WLAN, __FUNCTION__, [
+            'filename' => $fileName,
+            'interface' => $interface,
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -83,16 +68,11 @@ class Wlan
      */
     public static function connect(string $name, string $interface, string $ssid = null)
     {
-        return Command::make(
-            self::getUtility(),
-            self::getCommand(),
-            __METHOD__,
-            [
-                'name' => $name,
-                'ssid' => $ssid,
-                'interface' => $interface,
-            ]
-        );
+        return Command::make(self::WLAN, __FUNCTION__, [
+            'name' => $name,
+            'ssid' => $ssid,
+            'interface' => $interface,
+        ]);
     }
 
     /**
@@ -106,14 +86,9 @@ class Wlan
      */
     public static function disconnect(string $interface)
     {
-        return Command::make(
-            self::getUtility(),
-            self::getCommand(),
-            __METHOD__,
-            [
-                'interface' => $interface,
-            ]
-        );
+        return Command::make(self::WLAN, __FUNCTION__, [
+            'interface' => $interface,
+        ]);
     }
 
     /**
@@ -129,15 +104,10 @@ class Wlan
      */
     public static function showNetworks(string $interface = null, string $mode = null)
     {
-        return Command::make(
-            self::getUtility(),
-            self::getCommand(),
-            __FUNCTION__,
-            [
-                'interface' => $interface,
-                'mode' => $mode,
-            ]
-        );
+        return Command::make(self::WLAN, __FUNCTION__, [
+            'interface' => $interface,
+            'mode' => $mode,
+        ]);
     }
 
     /**
@@ -147,26 +117,6 @@ class Wlan
      */
     public static function showInterfaces()
     {
-        return Command::make(
-            self::getUtility(),
-            self::getCommand(),
-            __FUNCTION__
-        );
-    }
-
-    /**
-     * @return Utility
-     */
-    public static function getUtility()
-    {
-        return new Utility();
-    }
-
-    /**
-     * @return string
-     */
-    public static function getCommand()
-    {
-        return self::$command;
+        return Command::make(self::WLAN, __FUNCTION__);
     }
 }
