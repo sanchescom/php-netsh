@@ -2,7 +2,6 @@
 
 namespace Sanchescom\Utility;
 
-use InvalidArgumentException;
 use Sanchescom\Utility\Exceptions\CommandException;
 
 /**
@@ -22,7 +21,7 @@ class Command
     /** @var array */
     private $options;
 
-    /** @var array  */
+    /** @var array */
     private $andCommands = [];
 
     /**
@@ -104,10 +103,6 @@ class Command
     {
         $command = $this->__toString();
 
-        if (empty($command)) {
-            throw new InvalidArgumentException('Command line is empty');
-        }
-
         if ($stdErr) {
             $command .= ' 2>&1';
         }
@@ -165,7 +160,7 @@ class Command
         );
 
         foreach ($this->andCommands as $andCommand) {
-            $command .= ' && ' . $andCommand;
+            $command .= ' && '.$andCommand;
         }
 
         return $command;
