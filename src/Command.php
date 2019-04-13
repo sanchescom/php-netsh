@@ -89,7 +89,18 @@ class Command
      */
     public function and(Command ...$commands)
     {
-        $this->andCommands = array_merge($this->andCommands, $commands);
+        $this->setAndCommands($commands);
+
+        return $this;
+    }
+
+    /**
+     * @param string $command
+     * @return $this
+     */
+    public function andRaw(string $command)
+    {
+        $this->setAndCommands([$command]);
 
         return $this;
     }
@@ -120,6 +131,14 @@ class Command
         }
 
         return $output;
+    }
+
+    /**
+     * @param array $commands
+     */
+    protected function setAndCommands(array $commands)
+    {
+        $this->andCommands = array_merge($this->andCommands, $commands);
     }
 
     /**
