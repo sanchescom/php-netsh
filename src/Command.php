@@ -2,6 +2,9 @@
 
 namespace Sanchescom\Utility;
 
+use InvalidArgumentException;
+use Sanchescom\Utility\Exceptions\CommandException;
+
 /**
  * Class Command.
  */
@@ -18,6 +21,9 @@ class Command
 
     /** @var array */
     private $options;
+
+    /** @var array  */
+    private $andCommands = [];
 
     /**
      * Command constructor.
@@ -78,6 +84,50 @@ class Command
     }
 
     /**
+     * @param Command ...$commands
+     *
+     * @return Command
+     */
+    public function and(Command ...$commands)
+    {
+        $this->andCommands = array_merge($this->andCommands, $commands);
+
+        return $this;
+    }
+
+    /**
+     * @param bool $stdErr
+     *
+     * @return string
+     */
+    public function exec($stdErr = true)
+    {
+        $command = $this->__toString();
+
+        if (empty($command)) {
+            throw new InvalidArgumentException('Command line is empty');
+        }
+
+        if ($stdErr) {
+            $command .= ' 2>&1';
+        }
+
+        exec($command, $output, $code);
+
+        if (count($output) === 0) {
+            $output = $code;
+        } else {
+            $output = implode(PHP_EOL, $output);
+        }
+
+        if ($code !== 0) {
+            throw new CommandException($command, $output, $code);
+        }
+
+        return $output;
+    }
+
+    /**
      * @return string
      */
     protected function extractCommand()
@@ -106,12 +156,18 @@ class Command
      */
     public function __toString()
     {
-        return trim(
+        $command = trim(
             implode(' ', array_merge([
                 $this->getUtility(),
                 $this->getArgument(),
                 $this->getCommand(),
             ], $this->getOptions()))
         );
+
+        foreach ($this->andCommands as $andCommand) {
+            $command .= ' && ' . $andCommand;
+        }
+
+        return $command;
     }
 }

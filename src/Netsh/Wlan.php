@@ -29,7 +29,7 @@ class Wlan
         return Command::make(self::WLAN, __FUNCTION__, [
             'permission' => $permission,
             'ssid' => $ssid,
-            'network_type' => $networkType,
+            'networktype' => $networkType,
         ]);
     }
 
@@ -118,5 +118,23 @@ class Wlan
     public static function showInterfaces()
     {
         return Command::make(self::WLAN, __FUNCTION__);
+    }
+
+    /**
+     * Removes a wireless network from the wireless allowed or blocked list.
+     *
+     * @param string $permission Required. Specifies the permission type of the filter.
+     * @param string $ssid Specifies the SSID of the wireless network.
+     * @param string $networkType Specifies whether the wireless network type is adhoc or infrastructure.
+     *
+     * @return Command
+     */
+    public static function deleteFilter(string $permission, string $ssid, string $networkType)
+    {
+        return Command::make(self::WLAN, __FUNCTION__, [
+            'permission' => $permission,
+            'ssid' => $ssid,
+            'networktype' => $networkType,
+        ]);
     }
 }
